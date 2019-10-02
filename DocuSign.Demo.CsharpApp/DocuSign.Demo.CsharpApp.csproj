@@ -8,4 +8,12 @@
   <ItemGroup>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DocuSign.Tsp\DocuSign.Tsp.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
+    <ProjectReference Include="..\DocuSign.Demo.SignatureProvider\DocuSign.Demo.SignatureProvider.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
+  </ItemGroup>
 </Project>
