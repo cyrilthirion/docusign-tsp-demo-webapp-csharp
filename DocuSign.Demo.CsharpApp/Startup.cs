@@ -1,14 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DocuSign.Demo.CsharpApp.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using DocuSign.Demo.CsharpApp.Configurations;
 
 namespace DocuSign.Demo.CsharpApp
 {
@@ -25,6 +20,7 @@ namespace DocuSign.Demo.CsharpApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddRazorPages();
 
             services.AddHttpClient();
 
@@ -56,7 +52,9 @@ namespace DocuSign.Demo.CsharpApp
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapRazorPages();
             });
+
         }
     }
 }
