@@ -18,6 +18,22 @@ namespace DocuSign.eSign.Api
     public interface ISignatureApi : IApiAccessor
     {
         #region Synchronous Operations
+        #region UserInfo
+        /// <summary>
+        /// Provides user information for a Trust Service Provider.
+        /// </summary>
+        /// <exception cref="DocuSign.eSign.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>UserInfoResponse</returns>
+        UserInfoResponse UserInfo();
+
+        /// <summary>
+        /// Provides user information for a Trust Service Provider.
+        /// </summary>
+        /// <exception cref="DocuSign.eSign.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>ApiResponse of (UserInfoResponse)</returns>
+        ApiResponse<UserInfoResponse> UserInfoWithHttpInfo();
+        #endregion UserInfo
+
         #region SignHashSessionInfo
         /// <summary>
         /// Provides signing session information for a Trust Service Provider. 
@@ -110,6 +126,23 @@ namespace DocuSign.eSign.Api
         #endregion Synchronous Operations
 
         #region Asynchronous Operations
+        #region UserInfo
+        /// <summary>
+        /// Provides user information for a Trust Service Provider.
+        /// </summary>
+        /// <exception cref="DocuSign.eSign.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>UserInfoResponse</returns>
+        System.Threading.Tasks.Task<UserInfoResponse> UserInfoAsync();
+
+
+        /// <summary>
+        /// Provides user information for a Trust Service Provider.
+        /// </summary>
+        /// <exception cref="DocuSign.eSign.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>ApiResponse of (UserInfoResponse)</returns>
+        System.Threading.Tasks.Task<ApiResponse<UserInfoResponse>> UserInfoAsyncWithHttpInfo();
+        #endregion UserInfo
+
         #region SignHashSessionInfo
         /// <summary>
         /// Provides signing session information for a Trust Service Provider. 
@@ -287,6 +320,70 @@ namespace DocuSign.eSign.Api
         }
 
         #region Synchronous Operations
+        #region UserInfo
+        /// <summary>
+        /// Provides user information for a Trust Service Provider.
+        /// </summary>
+        /// <exception cref="DocuSign.eSign.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>UserInfoResponse</returns>
+        public UserInfoResponse UserInfo()
+        {
+            ApiResponse<UserInfoResponse> localVarResponse = UserInfoWithHttpInfo();
+            return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Provides user information for a Trust Service Provider.
+        /// </summary>
+        /// <exception cref="DocuSign.eSign.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>ApiResponse of (UserInfoResponse)</returns>
+        public ApiResponse<UserInfoResponse> UserInfoWithHttpInfo()
+        {
+            var localVarPath = _defaultApiPath + "/userinfo";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            string[] localVarHttpContentTypes = { };
+            string localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            string[] localVarHttpHeaderAccepts = { "application/json" };
+            string localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse)Configuration.ApiClient.CallApi(localVarPath,
+            Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("UserInfo", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            // DocuSign: Handle for PDF return types
+            if (localVarResponse.ContentType != null && !localVarResponse.ContentType.ToLower().Contains("json"))
+            {
+                return new ApiResponse<UserInfoResponse>(localVarStatusCode, localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()), (UserInfoResponse)Configuration.ApiClient.Deserialize(localVarResponse.RawBytes, typeof(UserInfoResponse)));
+            }
+            else
+            {
+                return new ApiResponse<UserInfoResponse>(localVarStatusCode, localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()), (UserInfoResponse)Configuration.ApiClient.Deserialize(localVarResponse, typeof(UserInfoResponse)));
+            }
+
+        }
+
+        #endregion UserInfo
+
         #region SignHashSessionInfo
         /// <summary>
         /// Provides signing session information for a Trust Service Provider. 
@@ -663,10 +760,71 @@ namespace DocuSign.eSign.Api
 
         }
         #endregion UpdateTransaction
-        
+
         #endregion Synchronous Operations
 
         #region Asynchronous Operations
+        #region UserInfo
+        /// <summary>
+        /// Provides user information for a Trust Service Provider.
+        /// </summary>
+        /// <exception cref="DocuSign.eSign.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>Task of UserInfoResponse</returns>
+        public async System.Threading.Tasks.Task<UserInfoResponse> UserInfoAsync()
+        {
+            ApiResponse<UserInfoResponse> localVarResponse = await UserInfoAsyncWithHttpInfo();
+            return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Provides user information for a Trust Service Provider.
+        /// </summary>
+        /// <exception cref="DocuSign.eSign.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>Task of ApiResponse (UserInfoResponse)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<UserInfoResponse>> UserInfoAsyncWithHttpInfo()
+        {
+            var localVarPath = _defaultApiPath + "/userinfo";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse)await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("UserInfo", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<UserInfoResponse>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (UserInfoResponse)Configuration.ApiClient.Deserialize(localVarResponse, typeof(UserInfoResponse)));
+
+        }
+        #endregion UserInfo
+
         #region SignHashSessionInfo
         /// <summary>
         /// Returns Account available seals for specified account. 
