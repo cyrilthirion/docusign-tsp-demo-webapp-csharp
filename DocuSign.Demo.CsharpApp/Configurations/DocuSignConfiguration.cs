@@ -1,4 +1,5 @@
-﻿namespace DocuSign.Demo.CsharpApp.Configurations
+﻿using System;
+namespace DocuSign.Demo.CsharpApp.Models
 {
     public class DocuSignConfiguration
     {

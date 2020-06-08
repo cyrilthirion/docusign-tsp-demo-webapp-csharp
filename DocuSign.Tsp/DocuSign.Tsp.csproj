@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <Folder Include="Api\" />
-    <Folder Include="Model\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DocuSign.eSign.dll" Version="4.1.0" />
