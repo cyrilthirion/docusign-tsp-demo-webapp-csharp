@@ -2,19 +2,14 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
 using DocuSign.Demo.CsharpApp.Configurations;
-using DocuSign.Demo.CsharpApp.Models;
 using DocuSign.Demo.CsharpApp.Services;
 using DocuSign.Demo.SignatureProvider.CA;
-using DocuSign.eSign.Client.Auth;
 using DocuSign.Tsp.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace DocuSign.Demo.CsharpApp.Controllers
 {
