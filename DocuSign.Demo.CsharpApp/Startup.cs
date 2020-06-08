@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using DocuSign.Demo.CsharpApp.Configurations;
+using DocuSign.Demo.CsharpApp.Settings;
+using Microsoft.Extensions.Options;
 
 namespace DocuSign.Demo.CsharpApp
 {
@@ -24,9 +25,14 @@ namespace DocuSign.Demo.CsharpApp
 
             services.AddHttpClient();
 
-            DocuSignConfiguration config = new DocuSignConfiguration();
-            Configuration.Bind("DocuSign", config);
-            services.AddSingleton(config);
+            services.AddTransient<IStartupFilter, SettingValidationStartupFilter>();
+
+            services.Configure<DocuSignSettings>(Configuration.GetSection("DocuSign"));
+
+            services.AddSingleton(resolver =>
+                resolver.GetRequiredService<IOptions<DocuSignSettings>>().Value);
+            services.AddSingleton<IValidatable>(resolver =>
+                resolver.GetRequiredService<IOptions<DocuSignSettings>>().Value);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

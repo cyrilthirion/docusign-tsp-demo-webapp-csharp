@@ -18,7 +18,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Pages\" />
-    <Folder Include="Configurations\" />
+    <Folder Include="Settings\" />
     <Folder Include="Services\" />
     <Folder Include="Pages\DocuSignTsp\" />
   </ItemGroup>

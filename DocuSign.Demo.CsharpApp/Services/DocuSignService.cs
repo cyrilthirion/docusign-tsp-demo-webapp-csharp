@@ -1,18 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using DocuSign.Demo.CsharpApp.Configurations;
-
+using System.Threading.Tasks;
+using DocuSign.Demo.CsharpApp.Settings;
+using DocuSign.Tsp.Model;
+using Newtonsoft.Json;
 
 namespace DocuSign.Demo.CsharpApp.Services
 {
     public static class DocuSignService
     {
-        public static HttpRequestMessage BuildBearerTokenFromCodeRequest(DocuSignConfiguration dsconfig, string code)
+        public static HttpRequestMessage BuildBearerTokenFromCodeRequest(DocuSignSettings dsconfig, string code)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, dsconfig.IDPServerBaseUrl + "oauth/token");
+            var request = new HttpRequestMessage(HttpMethod.Post, dsconfig.IDPServerBaseUrl + "/oauth/token");
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             string authorizationHeaderValue = string.Format("{0}:{1}", dsconfig.ClientId
@@ -34,5 +37,22 @@ namespace DocuSign.Demo.CsharpApp.Services
             return request;
         }
 
+        public static async Task<SignatureOAuthUserToken> GetBearerTokenFromCodeAsync(IHttpClientFactory httpClientFactory, DocuSignSettings dsConfig, string code)
+        {
+            HttpRequestMessage request = DocuSignService.BuildBearerTokenFromCodeRequest(dsConfig, code);
+
+            var client = httpClientFactory.CreateClient();
+            var response = await client.SendAsync(request);
+            var responseContent = response.Content.ReadAsStringAsync().Result;
+
+            if (response.StatusCode < HttpStatusCode.OK && response.StatusCode >= HttpStatusCode.BadRequest)
+            {
+                throw new Exception(response.Headers.ToString() + "\n" + responseContent);
+            }
+
+            return JsonConvert.DeserializeObject<SignatureOAuthUserToken>(responseContent);
+        }
+
     }
+
 }

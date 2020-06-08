@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using DocuSign.Demo.CsharpApp.Configurations;
 using DocuSign.Demo.CsharpApp.Services;
-using DocuSign.Demo.SignatureProvider.CA;
+using DocuSign.Demo.CsharpApp.Settings;
 using DocuSign.Tsp.Model;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
 
@@ -16,13 +11,13 @@ namespace DocuSign.Demo.CsharpApp.Pages.DocuSignTsp
 {
     public class StartTspFlowModel : PageModel
     {
-        private readonly DocuSignConfiguration _dsConfig;
+        private readonly DocuSignSettings _dsConfig;
         private readonly IHttpClientFactory _httpClientFactory;
 
         public SignatureOAuthUserToken SignatureOAuthUserToken { get; set; }
         public string error { get; set; }
 
-        public StartTspFlowModel(DocuSignConfiguration dsconfig, IHttpClientFactory clientFactory)
+        public StartTspFlowModel(DocuSignSettings dsconfig, IHttpClientFactory clientFactory)
         {
             _dsConfig = dsconfig;
             _httpClientFactory = clientFactory;

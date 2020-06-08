@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using DocuSign.Demo.CsharpApp.Configurations;
 using DocuSign.Demo.CsharpApp.Services;
+using DocuSign.Demo.CsharpApp.Settings;
 using DocuSign.Demo.SignatureProvider.CA;
 using DocuSign.Tsp.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 
 namespace DocuSign.Demo.CsharpApp.Controllers
 {
@@ -17,10 +15,10 @@ namespace DocuSign.Demo.CsharpApp.Controllers
     [Route("api/[controller]")]
     public class DocuSignTspController: Controller
     {
-        private readonly DocuSignConfiguration _dsConfig;
+        private readonly DocuSignSettings _dsConfig;
         private readonly IHttpClientFactory _httpClientFactory;
 
-        public DocuSignTspController(DocuSignConfiguration dsConfig, IHttpClientFactory httpClientFactory)
+        public DocuSignTspController(DocuSignSettings dsConfig, IHttpClientFactory httpClientFactory)
         {
             _dsConfig = dsConfig;
             _httpClientFactory = httpClientFactory;
@@ -37,23 +35,24 @@ namespace DocuSign.Demo.CsharpApp.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> StartTspFlow([FromQuery(Name = "code")] string authorizationCode)
         {
-            HttpRequestMessage request = DocuSignService.BuildBearerTokenFromCodeRequest(_dsConfig, authorizationCode);
-
-            var client = _httpClientFactory.CreateClient();
-            var response = await client.SendAsync(request);
-            var responseContent = response.Content.ReadAsStringAsync().Result;
-
-            if (response.StatusCode < HttpStatusCode.OK && response.StatusCode >= HttpStatusCode.BadRequest)
+            // First step is to get a token with the retrieve friom the query param
+            SignatureOAuthUserToken signatureOAuthUserToken;
+            try
             {
-                return Ok(response.Headers.ToString() + "\n" + responseContent);
+                signatureOAuthUserToken = await DocuSignService.GetBearerTokenFromCodeAsync(_httpClientFactory, _dsConfig, authorizationCode);
             }
-
-            var signatureOAuthTokenObj = JsonConvert.DeserializeObject<SignatureOAuthUserToken>(responseContent);
+            catch (Exception e)
+            {
+                // If you ending up in this case, make sure you clientId/clientSecret are good
+                // Also make sure you are hitting the right environement
+                return BadRequest(e);
+            }
+            
 
             // Initialize DocuSign ApiClient
             DocuSign.eSign.Client.Configuration dsConfiguration = new eSign.Client.Configuration();
-            dsConfiguration.ApiClient = new eSign.Client.ApiClient(signatureOAuthTokenObj.user_api + "/restapi");
-            dsConfiguration.AddDefaultHeader("Authorization", "Bearer " + signatureOAuthTokenObj.access_token);
+            dsConfiguration.ApiClient = new eSign.Client.ApiClient(signatureOAuthUserToken.user_api + "/restapi");
+            dsConfiguration.AddDefaultHeader("Authorization", "Bearer " + signatureOAuthUserToken.access_token);
 
             DocuSign.eSign.Api.SignatureApi signatureApi = new eSign.Api.SignatureApi(dsConfiguration);
 
