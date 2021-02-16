@@ -252,39 +252,11 @@ namespace DocuSign.eSign.Api
         /// Initializes a new instance of the <see cref="TrustServiceProvidersApi"/> class.
         /// </summary>
         /// <returns></returns>
-        public SignatureApi(String basePath)
+        public SignatureApi(ApiClient apiClient)
         {
-            this.Configuration = new Configuration(new ApiClient(basePath));
+            this.ApiClient = apiClient;
 
-            ExceptionFactory = DocuSign.eSign.Client.Configuration.DefaultExceptionFactory;
-
-            // ensure API client has configuration ready
-            if (Configuration.ApiClient.Configuration == null)
-            {
-                this.Configuration.ApiClient.Configuration = this.Configuration;
-            }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TrustServiceProvidersApi"/> class
-        /// using Configuration object
-        /// </summary>
-        /// <param name="configuration">An instance of Configuration</param>
-        /// <returns></returns>
-        public SignatureApi(Configuration configuration = null)
-        {
-            if (configuration == null) // use the default one in Configuration
-                this.Configuration = Configuration.Default;
-            else
-                this.Configuration = configuration;
-
-            ExceptionFactory = DocuSign.eSign.Client.Configuration.DefaultExceptionFactory;
-
-            // ensure API client has configuration ready
-            if (Configuration.ApiClient.Configuration == null)
-            {
-                this.Configuration.ApiClient.Configuration = this.Configuration;
-            }
+            ExceptionFactory = Configuration.DefaultExceptionFactory;
         }
         #endregion
 
@@ -294,14 +266,14 @@ namespace DocuSign.eSign.Api
         /// <value>The base path</value>
         public String GetBasePath()
         {
-            return this.Configuration.ApiClient.RestClient.BaseUrl.ToString();
+            return this.ApiClient.RestClient.BaseUrl.ToString();
         }
 
         /// <summary>
-        /// Gets or sets the configuration object
+        /// Gets or sets the ApiClient object
         /// </summary>
-        /// <value>An instance of the Configuration</value>
-        public Configuration Configuration { get; set; }
+        /// <value>An instance of the ApiClient</value>
+        public ApiClient ApiClient { get; set; }
 
         /// <summary>
         /// Provides a factory method hook for the creation of exceptions.
@@ -342,23 +314,23 @@ namespace DocuSign.eSign.Api
             var localVarPath = _defaultApiPath + "/userinfo";
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarHeaderParams = new Dictionary<String, String>(this.ApiClient.Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
             Object localVarPostBody = null;
 
             // to determine the Content-Type header
             string[] localVarHttpContentTypes = { };
-            string localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = this.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             string[] localVarHttpHeaderAccepts = { "application/json" };
-            string localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = this.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse)Configuration.ApiClient.CallApi(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse) this.ApiClient.CallApi(localVarPath,
             Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
@@ -373,11 +345,11 @@ namespace DocuSign.eSign.Api
             // DocuSign: Handle for PDF return types
             if (localVarResponse.ContentType != null && !localVarResponse.ContentType.ToLower().Contains("json"))
             {
-                return new ApiResponse<UserInfoResponse>(localVarStatusCode, localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()), (UserInfoResponse)Configuration.ApiClient.Deserialize(localVarResponse.RawBytes, typeof(UserInfoResponse)));
+                return new ApiResponse<UserInfoResponse>(localVarStatusCode, localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()), (UserInfoResponse)this.ApiClient.Deserialize(localVarResponse.RawBytes, typeof(UserInfoResponse)));
             }
             else
             {
-                return new ApiResponse<UserInfoResponse>(localVarStatusCode, localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()), (UserInfoResponse)Configuration.ApiClient.Deserialize(localVarResponse, typeof(UserInfoResponse)));
+                return new ApiResponse<UserInfoResponse>(localVarStatusCode, localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()), (UserInfoResponse)this.ApiClient.Deserialize(localVarResponse, typeof(UserInfoResponse)));
             }
 
         }
@@ -408,24 +380,24 @@ namespace DocuSign.eSign.Api
             var localVarPath = _defaultApiPath + "/signhashsessioninfo";
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarHeaderParams = new Dictionary<String, String>(this.ApiClient.Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
             Object localVarPostBody = null;
 
             // to determine the Content-Type header
             string[] localVarHttpContentTypes = { };
-            string localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = this.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             string[] localVarHttpHeaderAccepts = { "application/json" };
-            string localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = this.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             if (signHashSessionInfo != null && signHashSessionInfo.GetType() != typeof(byte[]))
             {
-                localVarPostBody = Configuration.ApiClient.Serialize(signHashSessionInfo); // http body (model) parameter
+                localVarPostBody = this.ApiClient.Serialize(signHashSessionInfo); // http body (model) parameter
             }
             else
             {
@@ -433,7 +405,7 @@ namespace DocuSign.eSign.Api
             }
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse)Configuration.ApiClient.CallApi(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse) this.ApiClient.CallApi(localVarPath,
             Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
@@ -449,11 +421,11 @@ namespace DocuSign.eSign.Api
             // DocuSign: Handle for PDF return types
             if (localVarResponse.ContentType != null && !localVarResponse.ContentType.ToLower().Contains("json"))
             {
-                return new ApiResponse<SignHashSessionInfoResponse>(localVarStatusCode, localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()), (SignHashSessionInfoResponse)Configuration.ApiClient.Deserialize(localVarResponse.RawBytes, typeof(SignHashSessionInfoResponse)));
+                return new ApiResponse<SignHashSessionInfoResponse>(localVarStatusCode, localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()), (SignHashSessionInfoResponse)this.ApiClient.Deserialize(localVarResponse.RawBytes, typeof(SignHashSessionInfoResponse)));
             }
             else
             {
-                return new ApiResponse<SignHashSessionInfoResponse>(localVarStatusCode, localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()), (SignHashSessionInfoResponse)Configuration.ApiClient.Deserialize(localVarResponse, typeof(SignHashSessionInfoResponse)));
+                return new ApiResponse<SignHashSessionInfoResponse>(localVarStatusCode, localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()), (SignHashSessionInfoResponse)this.ApiClient.Deserialize(localVarResponse, typeof(SignHashSessionInfoResponse)));
             }
 
         }
@@ -484,24 +456,24 @@ namespace DocuSign.eSign.Api
             var localVarPath = _defaultApiPath + "/completesignhash";
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarHeaderParams = new Dictionary<String, String>(this.ApiClient.Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
             Object localVarPostBody = null;
 
             // to determine the Content-Type header
             string[] localVarHttpContentTypes = { };
-            string localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = this.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             string[] localVarHttpHeaderAccepts = { "application/json" };
-            string localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = this.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             if (completeSignRequest != null && completeSignRequest.GetType() != typeof(byte[]))
             {
-                localVarPostBody = Configuration.ApiClient.Serialize(completeSignRequest); // http body (model) parameter
+                localVarPostBody = this.ApiClient.Serialize(completeSignRequest); // http body (model) parameter
             }
             else
             {
@@ -509,7 +481,7 @@ namespace DocuSign.eSign.Api
             }
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse)Configuration.ApiClient.CallApi(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse) this.ApiClient.CallApi(localVarPath,
             Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
@@ -525,11 +497,11 @@ namespace DocuSign.eSign.Api
             // DocuSign: Handle for PDF return types
             if (localVarResponse.ContentType != null && !localVarResponse.ContentType.ToLower().Contains("json"))
             {
-                return new ApiResponse<CompleteSignHashResponse>(localVarStatusCode, localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()), (CompleteSignHashResponse)Configuration.ApiClient.Deserialize(localVarResponse.RawBytes, typeof(CompleteSignHashResponse)));
+                return new ApiResponse<CompleteSignHashResponse>(localVarStatusCode, localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()), (CompleteSignHashResponse)this.ApiClient.Deserialize(localVarResponse.RawBytes, typeof(CompleteSignHashResponse)));
             }
             else
             {
-                return new ApiResponse<CompleteSignHashResponse>(localVarStatusCode, localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()), (CompleteSignHashResponse)Configuration.ApiClient.Deserialize(localVarResponse, typeof(CompleteSignHashResponse)));
+                return new ApiResponse<CompleteSignHashResponse>(localVarStatusCode, localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()), (CompleteSignHashResponse)this.ApiClient.Deserialize(localVarResponse, typeof(CompleteSignHashResponse)));
             }
 
         }
@@ -559,24 +531,24 @@ namespace DocuSign.eSign.Api
             var localVarPath = _defaultApiPath + "/signdocumentsessioninfo";
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarHeaderParams = new Dictionary<String, String>(this.ApiClient.Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
             Object localVarPostBody = null;
 
             // to determine the Content-Type header
             string[] localVarHttpContentTypes = { };
-            string localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = this.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             string[] localVarHttpHeaderAccepts = { "application/json" };
-            string localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = this.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             if (signDocumentSessionInfo != null && signDocumentSessionInfo.GetType() != typeof(byte[]))
             {
-                localVarPostBody = Configuration.ApiClient.Serialize(signDocumentSessionInfo); // http body (model) parameter
+                localVarPostBody = this.ApiClient.Serialize(signDocumentSessionInfo); // http body (model) parameter
             }
             else
             {
@@ -584,7 +556,7 @@ namespace DocuSign.eSign.Api
             }
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse)Configuration.ApiClient.CallApi(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse) this.ApiClient.CallApi(localVarPath,
             Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
@@ -600,11 +572,11 @@ namespace DocuSign.eSign.Api
             // DocuSign: Handle for PDF return types
             if (localVarResponse.ContentType != null && !localVarResponse.ContentType.ToLower().Contains("json"))
             {
-                return new ApiResponse<SignHashSessionInfoResponse>(localVarStatusCode, localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()), (SignHashSessionInfoResponse)Configuration.ApiClient.Deserialize(localVarResponse.RawBytes, typeof(SignHashSessionInfoResponse)));
+                return new ApiResponse<SignHashSessionInfoResponse>(localVarStatusCode, localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()), (SignHashSessionInfoResponse)this.ApiClient.Deserialize(localVarResponse.RawBytes, typeof(SignHashSessionInfoResponse)));
             }
             else
             {
-                return new ApiResponse<SignHashSessionInfoResponse>(localVarStatusCode, localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()), (SignHashSessionInfoResponse)Configuration.ApiClient.Deserialize(localVarResponse, typeof(SignHashSessionInfoResponse)));
+                return new ApiResponse<SignHashSessionInfoResponse>(localVarStatusCode, localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()), (SignHashSessionInfoResponse)this.ApiClient.Deserialize(localVarResponse, typeof(SignHashSessionInfoResponse)));
             }
 
         }
@@ -635,24 +607,24 @@ namespace DocuSign.eSign.Api
             var localVarPath = _defaultApiPath + "/completesigndocument";
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarHeaderParams = new Dictionary<String, String>(this.ApiClient.Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
             Object localVarPostBody = null;
 
             // to determine the Content-Type header
             string[] localVarHttpContentTypes = { };
-            string localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = this.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             string[] localVarHttpHeaderAccepts = { "application/json" };
-            string localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = this.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             if (completeSignRequest != null && completeSignRequest.GetType() != typeof(byte[]))
             {
-                localVarPostBody = Configuration.ApiClient.Serialize(completeSignRequest); // http body (model) parameter
+                localVarPostBody = this.ApiClient.Serialize(completeSignRequest); // http body (model) parameter
             }
             else
             {
@@ -660,7 +632,7 @@ namespace DocuSign.eSign.Api
             }
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse)Configuration.ApiClient.CallApi(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse) this.ApiClient.CallApi(localVarPath,
             Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
@@ -676,11 +648,11 @@ namespace DocuSign.eSign.Api
             // DocuSign: Handle for PDF return types
             if (localVarResponse.ContentType != null && !localVarResponse.ContentType.ToLower().Contains("json"))
             {
-                return new ApiResponse<CompleteSignHashResponse>(localVarStatusCode, localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()), (CompleteSignHashResponse)Configuration.ApiClient.Deserialize(localVarResponse.RawBytes, typeof(CompleteSignHashResponse)));
+                return new ApiResponse<CompleteSignHashResponse>(localVarStatusCode, localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()), (CompleteSignHashResponse)this.ApiClient.Deserialize(localVarResponse.RawBytes, typeof(CompleteSignHashResponse)));
             }
             else
             {
-                return new ApiResponse<CompleteSignHashResponse>(localVarStatusCode, localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()), (CompleteSignHashResponse)Configuration.ApiClient.Deserialize(localVarResponse, typeof(CompleteSignHashResponse)));
+                return new ApiResponse<CompleteSignHashResponse>(localVarStatusCode, localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()), (CompleteSignHashResponse)this.ApiClient.Deserialize(localVarResponse, typeof(CompleteSignHashResponse)));
             }
 
         }
@@ -710,24 +682,24 @@ namespace DocuSign.eSign.Api
             var localVarPath = _defaultApiPath + "/updatetransaction";
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarHeaderParams = new Dictionary<String, String>(this.ApiClient.Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
             Object localVarPostBody = null;
 
             // to determine the Content-Type header
             string[] localVarHttpContentTypes = { };
-            string localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = this.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             string[] localVarHttpHeaderAccepts = { "application/json" };
-            string localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = this.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             if (updateTransactionRequest != null && updateTransactionRequest.GetType() != typeof(byte[]))
             {
-                localVarPostBody = Configuration.ApiClient.Serialize(updateTransactionRequest); // http body (model) parameter
+                localVarPostBody = this.ApiClient.Serialize(updateTransactionRequest); // http body (model) parameter
             }
             else
             {
@@ -735,7 +707,7 @@ namespace DocuSign.eSign.Api
             }
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse)Configuration.ApiClient.CallApi(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse) this.ApiClient.CallApi(localVarPath,
             Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
@@ -751,11 +723,11 @@ namespace DocuSign.eSign.Api
             // DocuSign: Handle for PDF return types
             if (localVarResponse.ContentType != null && !localVarResponse.ContentType.ToLower().Contains("json"))
             {
-                return new ApiResponse<UpdateTransactionResponse>(localVarStatusCode, localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()), (UpdateTransactionResponse)Configuration.ApiClient.Deserialize(localVarResponse.RawBytes, typeof(UpdateTransactionResponse)));
+                return new ApiResponse<UpdateTransactionResponse>(localVarStatusCode, localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()), (UpdateTransactionResponse)this.ApiClient.Deserialize(localVarResponse.RawBytes, typeof(UpdateTransactionResponse)));
             }
             else
             {
-                return new ApiResponse<UpdateTransactionResponse>(localVarStatusCode, localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()), (UpdateTransactionResponse)Configuration.ApiClient.Deserialize(localVarResponse, typeof(UpdateTransactionResponse)));
+                return new ApiResponse<UpdateTransactionResponse>(localVarStatusCode, localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()), (UpdateTransactionResponse)this.ApiClient.Deserialize(localVarResponse, typeof(UpdateTransactionResponse)));
             }
 
         }
@@ -787,7 +759,7 @@ namespace DocuSign.eSign.Api
             var localVarPath = _defaultApiPath + "/userinfo";
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarHeaderParams = new Dictionary<String, String>(this.ApiClient.Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
             Object localVarPostBody = null;
@@ -795,18 +767,18 @@ namespace DocuSign.eSign.Api
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            String localVarHttpContentType = this.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json"
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            String localVarHttpHeaderAccept = this.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse)await Configuration.ApiClient.CallApiAsync(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)await this.ApiClient.CallApiAsync(localVarPath,
                 Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
@@ -820,7 +792,7 @@ namespace DocuSign.eSign.Api
 
             return new ApiResponse<UserInfoResponse>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (UserInfoResponse)Configuration.ApiClient.Deserialize(localVarResponse, typeof(UserInfoResponse)));
+                (UserInfoResponse)this.ApiClient.Deserialize(localVarResponse, typeof(UserInfoResponse)));
 
         }
         #endregion UserInfo
@@ -850,7 +822,7 @@ namespace DocuSign.eSign.Api
             var localVarPath = _defaultApiPath + "/signhashsessioninfo";
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarHeaderParams = new Dictionary<String, String>(this.ApiClient.Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
             Object localVarPostBody = null;
@@ -858,19 +830,19 @@ namespace DocuSign.eSign.Api
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            String localVarHttpContentType = this.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json"
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            String localVarHttpHeaderAccept = this.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             if (signHashSessionInfo != null && signHashSessionInfo.GetType() != typeof(byte[]))
             {
-                localVarPostBody = Configuration.ApiClient.Serialize(signHashSessionInfo); // http body (model) parameter
+                localVarPostBody = this.ApiClient.Serialize(signHashSessionInfo); // http body (model) parameter
             }
             else
             {
@@ -878,7 +850,7 @@ namespace DocuSign.eSign.Api
             }
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse)await Configuration.ApiClient.CallApiAsync(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)await this.ApiClient.CallApiAsync(localVarPath,
                 Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
@@ -892,7 +864,7 @@ namespace DocuSign.eSign.Api
 
             return new ApiResponse<SignHashSessionInfoResponse>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (SignHashSessionInfoResponse)Configuration.ApiClient.Deserialize(localVarResponse, typeof(SignHashSessionInfoResponse)));
+                (SignHashSessionInfoResponse) this.ApiClient.Deserialize(localVarResponse, typeof(SignHashSessionInfoResponse)));
 
         }
         #endregion SignHashSessionInfo
@@ -921,24 +893,24 @@ namespace DocuSign.eSign.Api
             var localVarPath = _defaultApiPath + "/completesignhash";
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarHeaderParams = new Dictionary<String, String>(this.ApiClient.Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
             Object localVarPostBody = null;
 
             // to determine the Content-Type header
             string[] localVarHttpContentTypes = { };
-            string localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = this.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             string[] localVarHttpHeaderAccepts = { "application/json" };
-            string localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = this.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             if (completeSignRequest != null && completeSignRequest.GetType() != typeof(byte[]))
             {
-                localVarPostBody = Configuration.ApiClient.Serialize(completeSignRequest); // http body (model) parameter
+                localVarPostBody = this.ApiClient.Serialize(completeSignRequest); // http body (model) parameter
             }
             else
             {
@@ -946,7 +918,7 @@ namespace DocuSign.eSign.Api
             }
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse)await Configuration.ApiClient.CallApiAsync(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)await this.ApiClient.CallApiAsync(localVarPath,
             Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
@@ -962,7 +934,7 @@ namespace DocuSign.eSign.Api
             // DocuSign: Handle for PDF return types
             return new ApiResponse<CompleteSignHashResponse>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (CompleteSignHashResponse)Configuration.ApiClient.Deserialize(localVarResponse, typeof(CompleteSignHashResponse)));
+                (CompleteSignHashResponse)this.ApiClient.Deserialize(localVarResponse, typeof(CompleteSignHashResponse)));
         }
         #endregion CompleteSignHash
 
@@ -991,7 +963,7 @@ namespace DocuSign.eSign.Api
             var localVarPath = _defaultApiPath + "/signdocumentsessioninfo";
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarHeaderParams = new Dictionary<String, String>(this.ApiClient.Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
             Object localVarPostBody = null;
@@ -999,19 +971,19 @@ namespace DocuSign.eSign.Api
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            String localVarHttpContentType = this.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json"
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            String localVarHttpHeaderAccept = this.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             if (signDocumentSessionInfo != null && signDocumentSessionInfo.GetType() != typeof(byte[]))
             {
-                localVarPostBody = Configuration.ApiClient.Serialize(signDocumentSessionInfo); // http body (model) parameter
+                localVarPostBody = this.ApiClient.Serialize(signDocumentSessionInfo); // http body (model) parameter
             }
             else
             {
@@ -1019,7 +991,7 @@ namespace DocuSign.eSign.Api
             }
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse)await Configuration.ApiClient.CallApiAsync(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)await this.ApiClient.CallApiAsync(localVarPath,
                 Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
@@ -1033,7 +1005,7 @@ namespace DocuSign.eSign.Api
 
             return new ApiResponse<SignHashSessionInfoResponse>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (SignHashSessionInfoResponse)Configuration.ApiClient.Deserialize(localVarResponse, typeof(SignHashSessionInfoResponse)));
+                (SignHashSessionInfoResponse)this.ApiClient.Deserialize(localVarResponse, typeof(SignHashSessionInfoResponse)));
 
         }
         #endregion SignDocumentSessionInfo
@@ -1062,24 +1034,24 @@ namespace DocuSign.eSign.Api
             var localVarPath = _defaultApiPath + "/completesigndocument";
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarHeaderParams = new Dictionary<String, String>(this.ApiClient.Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
             Object localVarPostBody = null;
 
             // to determine the Content-Type header
             string[] localVarHttpContentTypes = { };
-            string localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = this.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             string[] localVarHttpHeaderAccepts = { "application/json" };
-            string localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = this.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             if (completeSignRequest != null && completeSignRequest.GetType() != typeof(byte[]))
             {
-                localVarPostBody = Configuration.ApiClient.Serialize(completeSignRequest); // http body (model) parameter
+                localVarPostBody = this.ApiClient.Serialize(completeSignRequest); // http body (model) parameter
             }
             else
             {
@@ -1087,7 +1059,7 @@ namespace DocuSign.eSign.Api
             }
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse)await Configuration.ApiClient.CallApiAsync(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)await this.ApiClient.CallApiAsync(localVarPath,
             Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
@@ -1103,7 +1075,7 @@ namespace DocuSign.eSign.Api
             // DocuSign: Handle for PDF return types
             return new ApiResponse<CompleteSignHashResponse>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (CompleteSignHashResponse)Configuration.ApiClient.Deserialize(localVarResponse, typeof(CompleteSignHashResponse)));
+                (CompleteSignHashResponse)this.ApiClient.Deserialize(localVarResponse, typeof(CompleteSignHashResponse)));
         }
         #endregion CompleteSignDocument
 
@@ -1132,7 +1104,7 @@ namespace DocuSign.eSign.Api
             var localVarPath = _defaultApiPath + "/updatetransaction";
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarHeaderParams = new Dictionary<String, String>(this.ApiClient.Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
             Object localVarPostBody = null;
@@ -1140,19 +1112,19 @@ namespace DocuSign.eSign.Api
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            String localVarHttpContentType = this.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json"
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            String localVarHttpHeaderAccept = this.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             if (updateTransactionRequest != null && updateTransactionRequest.GetType() != typeof(byte[]))
             {
-                localVarPostBody = Configuration.ApiClient.Serialize(updateTransactionRequest); // http body (model) parameter
+                localVarPostBody = this.ApiClient.Serialize(updateTransactionRequest); // http body (model) parameter
             }
             else
             {
@@ -1160,7 +1132,7 @@ namespace DocuSign.eSign.Api
             }
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse)await Configuration.ApiClient.CallApiAsync(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)await this.ApiClient.CallApiAsync(localVarPath,
                 Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
@@ -1174,7 +1146,7 @@ namespace DocuSign.eSign.Api
 
             return new ApiResponse<UpdateTransactionResponse>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (UpdateTransactionResponse)Configuration.ApiClient.Deserialize(localVarResponse, typeof(UpdateTransactionResponse)));
+                (UpdateTransactionResponse)this.ApiClient.Deserialize(localVarResponse, typeof(UpdateTransactionResponse)));
 
         }
         #endregion UpdateTransaction
