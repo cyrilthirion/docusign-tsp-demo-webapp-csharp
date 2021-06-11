@@ -1,8 +1,11 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using DocuSign.Demo.CsharpApp.Services;
 using DocuSign.Demo.CsharpApp.Settings;
+using DocuSign.Demo.SignatureProvider.CA;
+using DocuSign.eSign.Model;
 using DocuSign.Tsp.Model;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
@@ -15,7 +18,7 @@ namespace DocuSign.Demo.CsharpApp.Pages.DocuSignTsp
         private readonly IHttpClientFactory _httpClientFactory;
 
         public SignatureOAuthUserToken SignatureOAuthUserToken { get; set; }
-        public string error { get; set; }
+        public UserInfoResponse UserInfoResponse { get; set; }
 
         public StartTspFlowModel(DocuSignSettings dsconfig, IHttpClientFactory clientFactory)
         {
@@ -24,33 +27,32 @@ namespace DocuSign.Demo.CsharpApp.Pages.DocuSignTsp
         }
 
 
-        public async Task OnGetAsync(string code)
+        public async Task OnGetAsync(string authorizationCode)
         {
-            HttpRequestMessage request = DocuSignService.BuildBearerTokenFromCodeRequest(_dsConfig, code);
-
-            var client = _httpClientFactory.CreateClient();
-            var response = await client.SendAsync(request);
-            var responseContent = response.Content.ReadAsStringAsync().Result;
-
-            if (response.StatusCode < HttpStatusCode.OK && response.StatusCode >= HttpStatusCode.BadRequest)
+            // First step is to get a token with the retrieve friom the query param
+            try
             {
-                error = response.Headers.ToString() + "\n" + responseContent;
+                SignatureOAuthUserToken = await DocuSignService.GetBearerTokenFromCodeAsync(_httpClientFactory, _dsConfig, authorizationCode);
+            }
+            catch (Exception e)
+            {
+                // If you ending up in this case, make sure you clientId/clientSecret are good
+                // Also make sure you are hitting the right environement
+                ViewData["Error"] = e;
             }
 
-            SignatureOAuthUserToken = JsonConvert.DeserializeObject<SignatureOAuthUserToken>(responseContent);
 
-            
-            //// Initialize DocuSign ApiClient
-            //DocuSign.eSign.Client.Configuration dsConfiguration = new eSign.Client.Configuration();
-            //dsConfiguration.ApiClient = new eSign.Client.ApiClient(signatureOAuthTokenObj.user_api + "/restapi");
-            //dsConfiguration.AddDefaultHeader("Authorization", "Bearer " + signatureOAuthTokenObj.access_token);
+            // Initialize DocuSign ApiClient
+            var apiClient = new eSign.Client.ApiClient(SignatureOAuthUserToken.user_api + "/restapi");
+            apiClient.Configuration.AddDefaultHeader("Authorization", "Bearer " + SignatureOAuthUserToken.access_token);
 
-            //DocuSign.eSign.Api.SignatureApi signatureApi = new eSign.Api.SignatureApi(dsConfiguration);
+            DocuSign.eSign.Api.SignatureApi signatureApi = new eSign.Api.SignatureApi(apiClient);
 
-            //// UserInfo
-            //var userInfoResult = signatureApi.UserInfo();
-
-            //UserCertificate userCertificate = new UserCertificate(userInfoResult.User.DisplayName, userInfoResult.User.Email, userInfoResult.Language.ToUpper(), "DocuSign");
+            // Get UserInfo
+            var userInfoResponse = signatureApi.UserInfo();
+            ViewData["UserInfo"] = JsonConvert.SerializeObject(userInfoResponse);
+            UserCertificate userCertificate = new UserCertificate(UserInfoResponse.User.DisplayName, UserInfoResponse.User.Email, UserInfoResponse.Language.ToUpper(), "DocuSign");
+           
 
             //var SignHashSessionInfoResult = signatureApi.SignHashSessionInfo(new eSign.Model.SignSessionInfoRequest(Convert.ToBase64String(userCertificate.CertContainer.Certificate.GetEncoded())));
 

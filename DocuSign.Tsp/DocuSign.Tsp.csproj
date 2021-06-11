@@ -9,6 +9,6 @@
     <Folder Include="Model\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DocuSign.eSign.dll" Version="4.1.0" />
+    <PackageReference Include="DocuSign.eSign.dll" Version="5.2.0" />
   </ItemGroup>
 </Project>
