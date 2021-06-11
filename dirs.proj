@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.Build.Traversal/2.0.12">
+  <ItemGroup>
+    <ProjectReference Include="DocuSign.Demo.CsharpApp/DocuSign.Demo.CsharpApp.csproj" />
+  </ItemGroup>
+</Project>

@@ -56,6 +56,7 @@ namespace DocuSign.Demo.SignatureProviderTest
                 );
 
                 byte[] signedData = signer.GetEncodedSignedAttributes();
+                System.IO.File.WriteAllBytes("/tmp/tmp.txt", signedData);
                 ISigner s = SignerUtilities.GetSigner("SHA256withRSA");
                 s.Init(false, cert.GetPublicKey());
                 s.BlockUpdate(signedData, 0, signedData.Length);
